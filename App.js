@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react'
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import { useState, useEffect } from 'react'
+import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Touchable } from 'react-native';
 import * as SecureStore from 'expo-secure-store'
 
 export default function App() {
@@ -8,7 +8,35 @@ export default function App() {
   const [key, setKey] = useState(null)
   const [value, setValue] = useState(null)
 
+  const [contacts, setContacts] = useState([])
 
+  console.log("CONTACTS: ", contacts)
+
+  const saveSecureContacts = async() => {
+
+    const newContacts = [
+      {id: 1, name: 'Jack', age: 34},
+      {id: 2, name: 'Murphy', age: 12},
+      {id: 3, name: 'Teddy', age: 12},
+      {id: 4, name: 'Doug', age: 35},
+      {id: 5, name: 'Marty', age: 36},
+      {id: 6, name: 'Anna', age: 33},
+      {id: 7, name: 'Munson', age: 25},
+      ]
+
+      const stringifiedContacts = JSON.stringify(newContacts)
+
+      await SecureStore.setItemAsync('contactsKey', stringifiedContacts)
+
+      // alert("Contacts saved!")
+
+  }
+
+  const getContacts = async() => {
+    let result = await SecureStore.getItemAsync('contactsKey')
+    
+    setContacts(JSON.parse(result))
+  }
 
   const saveSecureValue = async() => {
     console.log(key, value)
@@ -21,6 +49,22 @@ export default function App() {
     let result = await SecureStore.getItemAsync(key)
     setValue(result)
   }
+
+  console.log(contacts)
+
+  useEffect(()=> {
+
+    saveSecureContacts()
+    getContacts()
+
+  }, [])
+
+  const list = contacts?.map(item => (
+    <View key={item.id} className="bg-white flex-row items-center justify-between p-2 rounded-md self-center my-1 w-11/12">
+      <Text>{item.name}</Text>
+      <Text>{item.age}</Text>
+    </View>
+  ))
 
   return (
     <View className="pt-14 flex-1 bg-gray-200">
@@ -50,6 +94,23 @@ export default function App() {
         <Text>Value: {value}</Text>
 
       </View>
+
+        <View className="flex-row items-center justify-center">
+
+        <TouchableOpacity className="bg-green-400 rounded-md items-center p-2 self-center mt-4 mx-2" onPress={saveSecureContacts}>
+          <Text className="text-white text-xl">Save Contacts</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity className="bg-blue-400 rounded-md items-center p-2 self-center mt-4 mx-2" onPress={getContacts}>
+          <Text className="text-white text-xl">Retrieve Contacts</Text>
+        </TouchableOpacity>
+        
+          
+        </View>
+
+      {/* CONTACTS LIST */}
+        {list}
+      
 
       
       
