@@ -50,6 +50,11 @@ export default function App() {
     setValue(result)
   }
 
+  const deleteSecureValue = async() => {
+    await SecureStore.deleteItemAsync('contactsKey')
+    console.log('deleted')
+  }
+
   console.log(contacts)
 
   useEffect(()=> {
@@ -95,14 +100,17 @@ export default function App() {
 
       </View>
 
-        <View className="flex-row items-center justify-center">
+        <View className="flex-row items-center justify-center mt-4">
 
-        <TouchableOpacity className="bg-green-400 rounded-md items-center p-2 self-center mt-4 mx-2" onPress={saveSecureContacts}>
-          <Text className="text-white text-xl">Save Contacts</Text>
+        <TouchableOpacity className="bg-green-400 rounded-md items-center p-2 self-center  mx-2" onPress={saveSecureContacts}>
+          <Text className="text-white text-xl">Save </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity className="bg-blue-400 rounded-md items-center p-2 self-center mt-4 mx-2" onPress={getContacts}>
-          <Text className="text-white text-xl">Retrieve Contacts</Text>
+        <TouchableOpacity className="bg-blue-400 rounded-md items-center p-2 self-center mx-2" onPress={getContacts}>
+          <Text className="text-white text-xl">Retrieve</Text>
+        </TouchableOpacity>
+        <TouchableOpacity className="bg-red-400 rounded-md items-center p-2 self-center mx-2" onPress={deleteSecureValue}>
+          <Text className="text-white text-xl">Delete</Text>
         </TouchableOpacity>
         
           
